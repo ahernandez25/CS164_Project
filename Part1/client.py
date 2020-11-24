@@ -69,11 +69,17 @@ Enter Username and Passwd
 
 # Send username && passwd to server
 
+msgUsername = raw_input("Enter username: ")
+msgPswd = getpass.getpass()
+userpass = [msgUsername, msgPswd] 
+
+s.sendto(msUsername + msgPswd, (host,port))
+
 '''
 TODO: Part-1.3: User should log in successfully if username and password are entered correctly. A set of username/password pairs are hardcoded on the server side. 
 '''
 reply = s.recv(5)
-if reply == 'xxx': # TODO: use the correct string to replace xxx here!
+if reply == 'VALID': # TODO: use the correct string to replace xxx here!
 
 	# Start the receiving thread
 	start_new_thread(receiveThread ,(s,))

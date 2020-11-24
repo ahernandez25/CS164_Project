@@ -49,13 +49,24 @@ message queue for each user
 clients = []
 # TODO: Part-1 : create a var to store username && password. NOTE: A set of username/password pairs are hardcoded here. 
 # e.g. userpass = [......]
+userpass = [["user1", "password1"],["user2", "password2"], ["user3", "password3"]] 
+
 messages = [[],[],[]]
 count = 0
+
 
 '''
 Function for handling connections. This will be used to create threads
 '''
 def clientThread(conn):
+
+	data = conn.recv(1024)
+	username, password = d.split()
+	valid = "false"
+	for index in userpass :
+		if index[0] == username && index[1] == password : 
+			valid = "VALID"
+
 	global clients
 	global count
 	# Tips: Sending message to connected client
