@@ -49,7 +49,7 @@ message queue for each user
 clients = []
 # TODO: Part-1 : create a var to store username && password. NOTE: A set of username/password pairs are hardcoded here. 
 # e.g. userpass = [......]
-userpass = [["user1", "password1"],["user2", "password2"], ["user3", "password3"]] 
+userpass = [('user1', 'password1'),('user2', 'password2'), ('user3', 'password3')] 
 
 messages = [[],[],[]]
 count = 0
@@ -60,24 +60,40 @@ Function for handling connections. This will be used to create threads
 '''
 def clientThread(conn):
 
-	data = conn.recv(1024)
-	username, password = d.split()
-	valid = "false"
-	for index in userpass :
-		if index[0] == username && index[1] == password : 
-			valid = "VALID"
+	#data = conn.recv(1024)
+	#username, password = data.split(" ")
+	#valid = "false"
+	#for index in userpass :
+	#	if index[0] == username and index[1] == password : 
+	#		valid = "VALID"
+	#conn.send(valid)
 
 	global clients
 	global count
 	# Tips: Sending message to connected client
 	conn.send('Welcome to the server. Type something and hit enter\n') #send only takes string
 	rcv_msg = conn.recv(1024)
+	#print rcv_msg
+	data = rcv_msg
 	rcv_msg = stringToTuple(rcv_msg)
-	if rcv_msg in userpass:
-		user = userpass.index(rcv_msg)
-		
+	#print(rcv_msg)
+
+	username, password = data.split(" ")
+	valid = "false"
+	indexAt = 0
+	countIndex = 0
+	for index in userpass : 
+		if index[0] == username and index[1] == password : 
+			valid = "VALID"
+			indexAt = countIndex
+		countIndex = countIndex + 1
+
+	if valid == "VALID" : 
+	#if rcv_msg in userpass :
+		#user = userpass.index(rcv_msg)
+
 		try :
-			conn.sendall('valid')
+			conn.sendall('VALID')
 		except socket.error:
 			print 'Send failed'
 			sys.exit()
@@ -93,6 +109,9 @@ def clientThread(conn):
 				# TODO: Part-1: Add the logout processing here	
 			elif option == str(2):
 				print 'Post a message'
+			elif option == str(3) :
+				print 'Change Password'
+				msg = conn.recv(2)
 			else:
 				try :
 					conn.sendall('Option not valid')
@@ -102,7 +121,7 @@ def clientThread(conn):
 					clients.remove(conn)
 	else:
 		try :
-			conn.sendall('nalid')
+			conn.sendall('invalid username or password')
 		except socket.error:
 			print 'nalid Send failed'
 	print 'Logged out'

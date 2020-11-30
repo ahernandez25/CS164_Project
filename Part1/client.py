@@ -68,12 +68,13 @@ Enter Username and Passwd
 # get username from input. HINT: raw_input(); get passwd from input. HINT: getpass()
 
 # Send username && passwd to server
-
+welcome = s.recv(1024)
+print(welcome)
 msgUsername = raw_input("Enter username: ")
 msgPswd = getpass.getpass()
-userpass = [msgUsername, msgPswd] 
-
-s.sendto(msUsername + msgPswd, (host,port))
+userpass = (msgUsername, msgPswd) 
+up = msgUsername + " " + msgPswd
+s.sendto(up,(host,port))
 
 '''
 TODO: Part-1.3: User should log in successfully if username and password are entered correctly. A set of username/password pairs are hardcoded on the server side. 
@@ -88,7 +89,7 @@ if reply == 'VALID': # TODO: use the correct string to replace xxx here!
 	while True :
 
 		# TODO: Part-1.4: User should be provided with a menu. Complete the missing options in the menu!
-		message = raw_input("Choose an option (type the number): \n 1. Logout \n 2. Post a message \n")
+		message = raw_input("Choose an option (type the number): \n 1. Logout \n 2. Post a message \n 3. Change Password\n")
 		
 		try :
 			# TODO: Send the selected option to the server
@@ -99,6 +100,21 @@ if reply == 'VALID': # TODO: use the correct string to replace xxx here!
 			if message == str(2):
 				print 'Post a message'
 			# Add other operations, e.g. change password
+			if message == str(3):
+				print 'Change password\n----------'
+				s.sentto(str(3), (host,port))
+				oldpass = getpass.getpass(prompt='Old Password: ', stream=None)
+				usernamePass = [msgUsername, oldpass]
+				s.sendto(msgUsername + ' ' + oldpass, (host,port))
+
+				reply3 = s.recv(5)
+				if reply3 == 'VALID' :
+					start_new_thread(receiveThread , (s,))
+				
+					newPass = getpass.getpass(prompt='New Password: ', stream=None)
+					s.sendto(msgUsername + ' ' + newPass, (host, port))
+				else:
+					print 'Invalid Password. Try again' 
 		except socket.error:
 			print 'Send failed'
 			sys.exit()
