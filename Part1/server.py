@@ -124,7 +124,7 @@ def clientThread(conn):
 				
 				msg = conn.recv(1024)
 				data = msg
-				username, password = data.split(" ")
+				username, password, newpassword = data.split(" ")
 				valid = "false"
 				print userpass[indexAt]
 				if userpass[indexAt][0] == username and userpass[indexAt][1] == password : 
@@ -137,20 +137,23 @@ def clientThread(conn):
                 			#user = userpass.index(rcv_msg)
 
 					try :
-                       				conn.sendall('VALID')
-
+						conn.send('VALID')
+                       				#conn.sendall('VALID')
+						userpass.remove((username, password))
+                                        	userpass.append(tuple([username, newpassword]))
+                                        	print userpass[-1]
 						print 'sent valid'
 					except socket.error:
 						print 'Send failed'
 						sys.exit()
 					
-					try : 
-						newPass = conn.recv(1024)
-					except : 
-						break
-					userpass.remove((username, password))
-					userpass.append(tuple([username, newPass])) 
-                                        print userpass[indexAt]
+					#try : 
+					#	newPass = conn.recv(1024)
+					#except : 
+					#	break
+					#userpass.remove((username, password))
+					#userpass.append(tuple([username, newPass])) 
+                                        #print userpass[indexAt]
 	
 
 				else : 

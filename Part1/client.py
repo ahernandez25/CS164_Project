@@ -111,15 +111,19 @@ if reply == 'VALID': # TODO: use the correct string to replace xxx here!
 
 				oldpass = getpass.getpass(prompt='Old Password: ', stream=None)
 				usernamePass = [msgUsername, oldpass]
-				s.sendto(msgUsername + ' ' + oldpass, (host,port))
-				print 'sent old pass'
+				newpass = getpass.getpass(prompt='New Password: ', stream=None)
+
+				s.sendto(msgUsername + ' ' + oldpass + ' ' + newpass, (host,port))
+				print 'sent old and new pass'
 				
-				reply = s.recv(5)
+				reply = s.recv(5)	
+				#reply1, address = s.recvfrom(1024)
 				print 'reply recieved'
-				if reply == 'VALID':
-					 
-					newPass = getpass.getpass(prompt = 'New Password: ', stream = None)
-					s.sendto(newPass, (host, port))
+
+				if reply == 'VALID' :
+					print 'Password changed'
+				#	newPass = getpass.getpass(prompt = 'New Password: ', stream = None)
+					#s.sendto(newPass, (host, port))
 				else:
 					print 'Invalid Password. Try again' 
 		except socket.error:
