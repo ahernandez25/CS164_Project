@@ -114,6 +114,7 @@ def clientThread(conn):
 					clients.remove(conn)
 			elif option == str(2):
 				print 'Post a message'
+				
 			elif option == str(3) :
 				print 'Change Password'
 				#try : 
@@ -121,7 +122,7 @@ def clientThread(conn):
 				#except socket.error: 
 				#	print 'Send failed'
 				#	sys.exit()
-				
+				conn.send("change password")	
 				msg = conn.recv(1024)
 				data = msg
 				username, password, newpassword = data.split(" ")

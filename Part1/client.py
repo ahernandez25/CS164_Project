@@ -102,20 +102,25 @@ if reply == 'VALID': # TODO: use the correct string to replace xxx here!
 				break
 			if message == str(2):
 				print 'Post a message'
+				s.sendto(str(2), (host,port))
+	
+				
+		
+	
 			# Add other operations, e.g. change password
 			if message == str(3):
 				s.sendto(str(3), (host,port))
 				print 'Change password\n-------------\n'
 				#promptOldPass = s.recv(1024)
 				#print(promptOldPass)			
-
 				oldpass = getpass.getpass(prompt='Old Password: ', stream=None)
 				usernamePass = [msgUsername, oldpass]
 				newpass = getpass.getpass(prompt='New Password: ', stream=None)
 
+				
 				s.sendto(msgUsername + ' ' + oldpass + ' ' + newpass, (host,port))
 				print 'sent old and new pass'
-				
+					
 				reply = s.recv(5)	
 				#reply1, address = s.recvfrom(1024)
 				print 'reply recieved'
