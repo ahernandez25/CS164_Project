@@ -86,10 +86,12 @@ def clientThread(conn):
 		if index[0] == username and index[1] == password : 
 			valid = "VALID"
 			indexAt = countIndex
-		countIndex = countIndex + 1
+		else : 
+			countIndex = countIndex + 1
 
 	if valid == "VALID" : 
-	#if rcv_msg in userpass :
+		clients.append(conn)
+		#if rcv_msg in userpass :
 		#user = userpass.index(rcv_msg)
 
 		try :
@@ -107,11 +109,56 @@ def clientThread(conn):
 			if option == str(1):
 				print 'user logout'
 				# TODO: Part-1: Add the logout processing here	
+				conn.close()
+				if conn in clients:
+					clients.remove(conn)
 			elif option == str(2):
 				print 'Post a message'
 			elif option == str(3) :
 				print 'Change Password'
-				msg = conn.recv(2)
+				#try : 
+				#	conn.sendall('Enter old password: \n')
+				#except socket.error: 
+				#	print 'Send failed'
+				#	sys.exit()
+				
+				msg = conn.recv(1024)
+				data = msg
+				username, password = data.split(" ")
+				valid = "false"
+				print userpass[indexAt]
+				if userpass[indexAt][0] == username and userpass[indexAt][1] == password : 
+					valid = "VALID"
+					print 'valid old password \t' + userpass[indexAt][0] + "  " + userpass[indexAt][1]	
+					
+				
+				if valid == "VALID" :
+				        #if rcv_msg in userpass :
+                			#user = userpass.index(rcv_msg)
+
+					try :
+                       				conn.sendall('VALID')
+
+						print 'sent valid'
+					except socket.error:
+						print 'Send failed'
+						sys.exit()
+					
+					try : 
+						newPass = conn.recv(1024)
+					except : 
+						break
+					userpass.remove((username, password))
+					userpass.append(tuple([username, newPass])) 
+                                        print userpass[indexAt]
+	
+
+				else : 
+					try :
+                        			conn.sendall('invalid username or password')
+                			except socket.error:
+                       	 			print 'invalid Send failed'
+
 			else:
 				try :
 					conn.sendall('Option not valid')

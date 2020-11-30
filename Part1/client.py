@@ -90,29 +90,36 @@ if reply == 'VALID': # TODO: use the correct string to replace xxx here!
 
 		# TODO: Part-1.4: User should be provided with a menu. Complete the missing options in the menu!
 		message = raw_input("Choose an option (type the number): \n 1. Logout \n 2. Post a message \n 3. Change Password\n")
-		
+		#s.sendto(message, (host,port))
 		try :
 			# TODO: Send the selected option to the server
 			# HINT: use sendto()/sendall()
 			if message == str(1):
+				s.sendto(str(1), (host,port))
 				print 'Logout'
 				# TODO: add logout operation
+				s.close()
+				break
 			if message == str(2):
 				print 'Post a message'
 			# Add other operations, e.g. change password
 			if message == str(3):
-				print 'Change password\n----------'
-				s.sentto(str(3), (host,port))
+				s.sendto(str(3), (host,port))
+				print 'Change password\n-------------\n'
+				#promptOldPass = s.recv(1024)
+				#print(promptOldPass)			
+
 				oldpass = getpass.getpass(prompt='Old Password: ', stream=None)
 				usernamePass = [msgUsername, oldpass]
 				s.sendto(msgUsername + ' ' + oldpass, (host,port))
-
-				reply3 = s.recv(5)
-				if reply3 == 'VALID' :
-					start_new_thread(receiveThread , (s,))
+				print 'sent old pass'
 				
-					newPass = getpass.getpass(prompt='New Password: ', stream=None)
-					s.sendto(msgUsername + ' ' + newPass, (host, port))
+				reply = s.recv(5)
+				print 'reply recieved'
+				if reply == 'VALID':
+					 
+					newPass = getpass.getpass(prompt = 'New Password: ', stream = None)
+					s.sendto(newPass, (host, port))
 				else:
 					print 'Invalid Password. Try again' 
 		except socket.error:
