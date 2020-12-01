@@ -60,13 +60,6 @@ Function for handling connections. This will be used to create threads
 '''
 def clientThread(conn):
 
-	#data = conn.recv(1024)
-	#username, password = data.split(" ")
-	#valid = "false"
-	#for index in userpass :
-	#	if index[0] == username and index[1] == password : 
-	#		valid = "VALID"
-	#conn.send(valid)
 
 	global clients
 	global count
@@ -117,17 +110,12 @@ def clientThread(conn):
 				
 			elif option == str(3) :
 				print 'Change Password'
-				#try : 
-				#	conn.sendall('Enter old password: \n')
-				#except socket.error: 
-				#	print 'Send failed'
-				#	sys.exit()
-				conn.send("change password")	
+									
 				msg = conn.recv(1024)
 				data = msg
 				username, password, newpassword = data.split(" ")
 				valid = "false"
-				print userpass[indexAt]
+				#print userpass[indexAt]
 				if userpass[indexAt][0] == username and userpass[indexAt][1] == password : 
 					valid = "VALID"
 					print 'valid old password \t' + userpass[indexAt][0] + "  " + userpass[indexAt][1]	
@@ -139,7 +127,6 @@ def clientThread(conn):
 
 					try :
 						conn.send('VALID')
-                       				#conn.sendall('VALID')
 						userpass.remove((username, password))
                                         	userpass.append(tuple([username, newpassword]))
                                         	print userpass[-1]
@@ -148,14 +135,6 @@ def clientThread(conn):
 						print 'Send failed'
 						sys.exit()
 					
-					#try : 
-					#	newPass = conn.recv(1024)
-					#except : 
-					#	break
-					#userpass.remove((username, password))
-					#userpass.append(tuple([username, newPass])) 
-                                        #print userpass[indexAt]
-	
 
 				else : 
 					try :
