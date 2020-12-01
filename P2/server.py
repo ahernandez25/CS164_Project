@@ -43,6 +43,7 @@ print 'Socket now listening'
 
 # Start of the Skeleton Code
 
+clients= []
 userpass = [["user1", "passwd1"], ["user2", "passwd2"], ["user3", "passwd3"]]
 messages = [[],[],[]]
 subscriptions = [[],[],[]] # Store the group info
@@ -55,7 +56,8 @@ def clientthread(conn):
 	uppair = stringToTuple(uppair)
 	if uppair in userpass:
 		user = userpass.index(uppair)
-		
+		conn.sendall('valid')
+		print 'login successful'	
 		'''
 		Part-2:TODO: 
 		After the user logs in, check the unread message for this user.
@@ -69,6 +71,11 @@ def clientthread(conn):
 				break
 			if option == str(1):
 				# Logout that you implemented in Part-1
+				print 'User Logout'
+				conn.close()
+				if conn in clients:
+					clients.remove(conn)
+
 				break;
 			elif option == str(2):
 				message = conn.recv(1024)
@@ -76,6 +83,9 @@ def clientthread(conn):
 					'''
 					Part-2:TODO: Send private message
 					'''
+					msgToSend = conn.recv(1024)
+					rcv_id = conn.recv(1024)
+
 				if message == str(2):
 					'''
 					Part-2:TODO: Send broadcast message
@@ -111,6 +121,12 @@ def clientthread(conn):
 
 def receiveClients(s):
 	# Use the code in Part-1, do some modification if necessary
+	global clients
+	while 1:
+		conn, addr = s.accept()
+		print 'Connected with ' + addr[0] + ':' + str(addr[1])
+		clients.append(conn)
+		start_new_thread(clientthread, (conn,)) 
 
 start_new_thread(receiveClients ,(s,))
 while 1:

@@ -3,6 +3,7 @@ import sys
 from thread import *
 import getpass
 import os
+import time
 
 '''
 Function Definition
@@ -123,7 +124,7 @@ if reply == 'VALID': # TODO: use the correct string to replace xxx here!
 				
 				s.sendto(msgUsername + ' ' + oldpass + ' ' + newpass, (host,port))
 				print 'sent old and new pass'
-					
+				time.sleep(1)	
 				 
 				reply = s.recv(1024)	
 				

@@ -61,13 +61,14 @@ print 'Socket Connected to ' + host + ' on ip ' + remote_ip
 
 
 # Send username && passwd to server
-welcome = s.recv(1024)
-print(welcome)
 msgUsername = raw_input("Enter username: ")
 msgPswd = getpass.getpass()
 userpass = (msgUsername, msgPswd) 
-up = msgUsername + " " + msgPswd
-s.sendto(up,(host,port))
+
+#up = msgUsername + " " + msgPswd
+up = tupleToString(userpass)
+
+s.sendall(up)
 
 # Start of the Skeleton Code
 
@@ -85,6 +86,8 @@ if reply == 'valid':
 		try :
 			s.sendall(message)
 			if message == str(1):
+				print 'Logout'
+				s.close()
 				break
 				
 			if message == str(2):
@@ -100,6 +103,8 @@ if reply == 'valid':
 								'''
 								Part-2:TODO: Send private message
 								'''
+								s.sendall(pmsg)
+
 							except socket.error:
 								print 'Private Message Send failed'
 								sys.exit()
@@ -108,6 +113,9 @@ if reply == 'valid':
 								'''
 								Part-2:TODO: Send private message
 								'''
+								s.sendall(rcv_id)
+
+
 								break
 							except socket.error:
 								print 'rcv_id Send failed'
