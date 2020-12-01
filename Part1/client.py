@@ -59,7 +59,7 @@ Connect to remote server
 s.connect((remote_ip , port))
 print 'Socket Connected to ' + host + ' on ip ' + remote_ip
 
-s.settimeout(2)
+#s.settimeout(15)
 '''
 TODO: Part-1.1, 1.2: 
 Enter Username and Passwd
@@ -124,10 +124,9 @@ if reply == 'VALID': # TODO: use the correct string to replace xxx here!
 				s.sendto(msgUsername + ' ' + oldpass + ' ' + newpass, (host,port))
 				print 'sent old and new pass'
 					
-				try : 
-					reply = s.recv(5)	
-				except socket.timeout as e :
-					print(e)
+				 
+				reply = s.recv(1024)	
+				
 				print 'reply recieved'
 
 				if reply == 'VALID' :

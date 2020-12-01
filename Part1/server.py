@@ -126,11 +126,13 @@ def clientThread(conn):
                 			#user = userpass.index(rcv_msg)
 
 					try :
-						conn.send('VALID')
+						conn.sendall('VALID')
+						
+						
 						userpass.remove((username, password))
                                         	userpass.append(tuple([username, newpassword]))
                                         	print userpass[-1]
-						print 'sent valid'
+						print 'Password Changed'
 					except socket.error:
 						print 'Send failed'
 						sys.exit()
