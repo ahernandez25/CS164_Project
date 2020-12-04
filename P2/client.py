@@ -79,6 +79,7 @@ if reply == 'valid':
 	'''
 	Part-2:TODO: Please printout the number of unread message once a new client login
 	'''
+	print "Number of new messages: [" + ss + "]\n\n"
 	start_new_thread(receiveThread, (s,))
 	message = ""
 	while True :	
@@ -97,6 +98,7 @@ if reply == 'valid':
 						'''
 						Part-2:TODO: Send option to server
 						'''
+						s.sendall(message)
 						if message == str(1):
 							pmsg = raw_input("Enter your private message\n")
 							try :
@@ -119,6 +121,9 @@ if reply == 'valid':
 								break
 							except socket.error:
 								print 'rcv_id Send failed'
+								msgRecv = s.recv(1024)
+								print msgRecv
+
 								sys.exit()
 						if message == str(2):
 							bmsg = raw_input("Enter your broadcast message\n")
@@ -126,6 +131,7 @@ if reply == 'valid':
 								'''
 								Part-2:TODO: Send broadcast message
 								'''
+								s.sendall(bmsg)
 								break
 							except socket.error:
 								print 'Broadcast Message Send failed'
@@ -179,11 +185,16 @@ if reply == 'valid':
 				while not os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno()):
 					pass
 				option = raw_input("Do you want to: 1. View all offline messages; 2. View only from a particular Group\n")
+				#s.sendall(option)
 				if option == str(1):					
 					try :
 						'''
 						Part-2:TODO: View all offline messages
 						'''
+						s.sendall(option)
+						message = s.recv(1024)
+						print message + "\n"	
+
 					except socket.error:
 						print 'msg Send failed'
 						sys.exit()
