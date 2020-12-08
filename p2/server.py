@@ -50,7 +50,7 @@ userIndex = ["user1", "user2", "user3"]
 messages = [[],[],[]]
 subscriptions = [[],[],[]] # Store the group info
 groupNames = ["Group 1", "Group 2", "Group 3"]
-
+groupMsg = [[],[],[]]
 
 def clientthread(conn):
 	global clients
@@ -110,7 +110,7 @@ def clientthread(conn):
 					else : 
 						 msg = "User not found. Select another user"
 
-					conn.sendall(msg) 
+					#conn.sendall(msg) 
 	
 
 				if message == str(2):
@@ -144,13 +144,9 @@ def clientthread(conn):
 					g_id = conn.recv(10)
 					print(g_id)
 					if g_id in groupNames :
-						i = groupNames.index(g_id)
-						if user in subscriptions[i] : 
-							for x in subscriptions[i] :
-								messages[x].append(gmsg)
-							print "sent messages\n"
-						else :
-							print "user not in group\n"
+						i = groupNames.index(g_id)		
+						groupMsg[i].append(gmsg)
+						print groupMsg[i]
 					else :
 						print "group doesnt exist\n"
 
@@ -159,13 +155,6 @@ def clientthread(conn):
 				'''
 				Part-2:TODO: Join/Quit group
 				'''
-			#	groups = ""
-			#	for g in groupNames :
-			#		groups += g + " "
-
-			#	print(groups)
-			#	conn.sendall(groups)
-
 				option = conn.recv(1024)
 				print option + "\n"
 				if option == str(1) :
@@ -195,7 +184,6 @@ def clientthread(conn):
 
                         		print(groups)
                         		conn.sendall(groups)
-					print "sent groups"
 				else : 
 					print("Invalid option")
 		
@@ -203,12 +191,8 @@ def clientthread(conn):
 				'''
 				Part-2:TODO: Read offline message
 				'''
-				print "Read offline messages\n"
 				option = conn.recv(1024)
-				print "recieved option\n"
 				if option == str(1) : 
-					print "in option 1\n"
-					
 
 					if messages[user] :
 						print "have messages to read"
@@ -223,9 +207,17 @@ def clientthread(conn):
 						print "In else- no new messages"
 						message = "No offline messages"
 						conn.sendall(message)
-						print "message sent"
 				elif option == str(2) : 
-					conn.sendall(str(2))	
+					g_id = conn.recv(20)
+					print(g_id)
+					if g_id in groupNames :
+						i = groupNames.index(g_id)
+						msg = ""
+						for x in groupMsg[i] :
+							msg = msg + x + "\n"
+						print(msg)
+						conn.sendall(msg)
+	
 				else : 
 					conn.sendall("Option not valid")
 					conn.close()

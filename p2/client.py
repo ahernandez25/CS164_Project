@@ -8,11 +8,12 @@ from time import sleep
 '''
 Function Definition
 '''
+
 def receiveThread(s):
 	while True:
 		try:
-			reply = s.recv(4096) # receive msg from server
-			
+			sReply = s.recv(4096) # receive msg from server
+			print "\n" + sReply + "\n"		
 			# You can add operations below once you receive msg
 			# from the server
 
@@ -122,8 +123,6 @@ if reply == 'valid':
 								break
 							except socket.error:
 								print 'rcv_id Send failed'
-								msgRecv = s.recv(1024)
-								print msgRecv
 
 								sys.exit()
 						if message == str(2):
@@ -162,23 +161,16 @@ if reply == 'valid':
 						sys.exit() 
 					
 			if message == str(3):
-				#print "Available Groups"
-                                #groups = s.recv(1024)
-                                #print(groups)
 
 				option = raw_input("Do you want to: 1. Join Group 2. Quit Group: 3. View Groups \n")
 				s.sendall(option)
 				if option == str(1):
-					#print "Available Groups"
-                                	#groups = s.recv(24)
-                                	#print(groups)
 
 					group = raw_input("Enter the Group you want to join: ")
 					try :
 						'''
 						Part-2:TODO: Join a particular group
 						'''
-						#s.sendall(option)
 						s.sendall(group)
 					except socket.error:
 						print 'group info sent failed'
@@ -195,18 +187,9 @@ if reply == 'valid':
 						print 'group info sent failed'
 						sys.exit()
 				elif option == str(3) :
-				#	s.settimeout(5.0)	
-					groups = s.recv(1024)
+					sleep(1)	
 				
-				#	s.settimeout()
-					print groups + "\n"
 					
-					#groups = s.recv(10)
-					#print(groups)
-					#groups = s.rec(10)
-					#print(groups)
-					#groups = s.recv(10)
-					#print(groups)
 				else:
 					print 'Option not valid'
 			
@@ -221,8 +204,10 @@ if reply == 'valid':
 						Part-2:TODO: View all offline messages
 						'''
 						s.sendall(option)
-						message = s.recv(1024)
-						print message + "\n"	
+						sleep(1)
+						
+						#message = sReply
+						#print message + "\n"	
 
 					except socket.error:
 						print 'msg Send failed'
@@ -233,6 +218,10 @@ if reply == 'valid':
 						'''
 						Part-2:TODO: View only from a particular group
 						'''
+						s.sendall(option)
+						s.sendall(group)
+						sleep(1)
+
 					except socket.error:
 						print 'group Send failed'
 						sys.exit()
