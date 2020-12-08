@@ -49,6 +49,8 @@ userpass = [["user1", "passwd1"], ["user2", "passwd2"], ["user3", "passwd3"]]
 userIndex = ["user1", "user2", "user3"] 
 messages = [[],[],[]]
 subscriptions = [[],[],[]] # Store the group info
+groupNames = ["Group 1", "Group 2", "Group 3"]
+
 
 def clientthread(conn):
 	global clients
@@ -136,10 +138,67 @@ def clientthread(conn):
 					'''
 					Part-2:TODO: Send group message
 					'''
+					gmsg = conn.recv(1024)
+					print(gmsg)
+					
+					g_id = conn.recv(10)
+					print(g_id)
+					if g_id in groupNames :
+						i = groupNames.index(g_id)
+						if user in subscriptions[i] : 
+							for x in subscriptions[i] :
+								messages[x].append(gmsg)
+							print "sent messages\n"
+						else :
+							print "user not in group\n"
+					else :
+						print "group doesnt exist\n"
+
+
 			elif option == str(3):
 				'''
 				Part-2:TODO: Join/Quit group
 				'''
+			#	groups = ""
+			#	for g in groupNames :
+			#		groups += g + " "
+
+			#	print(groups)
+			#	conn.sendall(groups)
+
+				option = conn.recv(1024)
+				print option + "\n"
+				if option == str(1) :
+					joinGroup = conn.recv(25)		
+					print joinGroup + "\n"
+					if joinGroup in groupNames :
+						i = groupNames.index(joinGroup)
+						subscriptions[i].append(user)
+						print "User : " + str(subscriptions[i]) + " joined " + groupNames[i]				
+					else : 
+						print "Group name invalid"
+		
+				elif option == str(2) :
+					quitGroup = conn.recv(20)
+					if quitGroup in groupNames :
+                                                i = groupNames.index(quitGroup)
+                                                subscriptions[i].remove(user)
+                                                print "User : " + str(user)  + " quit " + groupNames[i]	
+
+				elif option == str(3) :
+					groups = ""
+
+                        	        for g in groupNames :
+                        			print g + "\n"
+						groups = groups + " " + g
+						
+
+                        		print(groups)
+                        		conn.sendall(groups)
+					print "sent groups"
+				else : 
+					print("Invalid option")
+		
 			elif option == str(4):
 				'''
 				Part-2:TODO: Read offline message
@@ -153,9 +212,13 @@ def clientthread(conn):
 
 					if messages[user] :
 						print "have messages to read"
-						message = "messages to read" 
-						conn.sendall(message)
-						messages[user].clear()
+						msg = ""
+						for x in  messages[user] : 
+							msg = msg + x + "\n"
+						
+						print(msg)
+						conn.sendall(msg)
+						messages.pop(user)
 					else : 
 						print "In else- no new messages"
 						message = "No offline messages"
@@ -189,8 +252,6 @@ def clientthread(conn):
 	conn.close()
 	if conn in clients:
 		clients.remove(conn)
-	if user in onlineUsers : 
-		onlineUsers.remove(user)
 def receiveClients(s):
 	# Use the code in Part-1, do some modification if necessary
 	global clients
@@ -216,8 +277,3 @@ while 1:
 		messages.append([])
 		subscriptions.append([])
 		print 'User created'
-	elif message == 'listgroup':
-		'''
-		Part-2:TODO: Implement the functionality to list all the available groups
-		'''
-s.close()

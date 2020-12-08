@@ -3,6 +3,7 @@ import sys
 from thread import *
 import getpass
 import os
+from time import sleep
 
 '''
 Function Definition
@@ -75,7 +76,7 @@ s.sendall(up)
 reply = s.recv(5)
 if reply == 'valid':
 	print 'Username and password valid'
-	ss = s.recv(4096)
+	ss = s.recv(5)
 	'''
 	Part-2:TODO: Please printout the number of unread message once a new client login
 	'''
@@ -142,6 +143,7 @@ if reply == 'valid':
 								'''
 								Part-2:TODO: Send group message
 								'''
+								s.sendall(gmsg)
 							except socket.error:
 								print 'Group Message Send failed'
 								sys.exit()
@@ -150,6 +152,7 @@ if reply == 'valid':
 								'''
 								Part-2:TODO: Send group message
 								'''
+								s.sendall(g_id)
 								break
 							except socket.error:
 								print 'g_id Send failed'
@@ -159,13 +162,24 @@ if reply == 'valid':
 						sys.exit() 
 					
 			if message == str(3):
-				option = raw_input("Do you want to: 1. Join Group 2. Quit Group: \n")
+				#print "Available Groups"
+                                #groups = s.recv(1024)
+                                #print(groups)
+
+				option = raw_input("Do you want to: 1. Join Group 2. Quit Group: 3. View Groups \n")
+				s.sendall(option)
 				if option == str(1):
+					#print "Available Groups"
+                                	#groups = s.recv(24)
+                                	#print(groups)
+
 					group = raw_input("Enter the Group you want to join: ")
 					try :
 						'''
 						Part-2:TODO: Join a particular group
 						'''
+						#s.sendall(option)
+						s.sendall(group)
 					except socket.error:
 						print 'group info sent failed'
 						sys.exit()
@@ -175,9 +189,24 @@ if reply == 'valid':
 						'''
 						Part-2:TODO: Quit a particular group
 						'''
+						s.sendall(group)
+						
 					except socket.error:
 						print 'group info sent failed'
 						sys.exit()
+				elif option == str(3) :
+				#	s.settimeout(5.0)	
+					groups = s.recv(1024)
+				
+				#	s.settimeout()
+					print groups + "\n"
+					
+					#groups = s.recv(10)
+					#print(groups)
+					#groups = s.rec(10)
+					#print(groups)
+					#groups = s.recv(10)
+					#print(groups)
 				else:
 					print 'Option not valid'
 			
